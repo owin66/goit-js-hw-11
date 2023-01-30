@@ -120,10 +120,8 @@ function checkImages(total) {
 
 function alerts(total, value) {
   if (total > 40) {
-    Notify.success(`Hooray! We found ${total} images of "${value}".`);
+    Notify.success(`We found ${total} images of "${value}".`);
   }
-
-  pixabayApi.addPage();
 
   if (total <= 40) {
     refs.loadMoreBtn.classList.add('is-hidden');
