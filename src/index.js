@@ -22,7 +22,7 @@ let callback = (entries, observer) => {
       Loading.pulse();
       pixabayApi.addPage();
       pixabayApi.getPhoto().then(response => {
-        const { hits, total } = response.data;
+        const { hits } = response.data;
 
         const markup = gallery(hits);
         refs.gallery.insertAdjacentHTML('beforeend', markup);
@@ -30,18 +30,16 @@ let callback = (entries, observer) => {
         gallerySL.on('show.simplelightbox');
         gallerySL.refresh();
 
-        Loading.remove(1000);
-
         const ifMore = pixabayApi.hasMorePhotos();
         if (ifMore) {
-          const lastImage = document.querySelector('.photo-link:last-child');
+          const lastImage = document.querySelector('.gallery-item:last-child');
           observer.observe(lastImage);
         } else {
           Notify.failure(
             "We're sorry, but you've reached the end of search results."
           );
         }
-      });
+      }, Loading.remove(1000));
     }
   });
 };
@@ -63,7 +61,6 @@ function onSubmitGetValue(e) {
 
   e.currentTarget.reset();
   pixabayApi.resetPage();
-  // refs.loadMoreBtn.classList.add('is-hidden');
 
   ifNoValue(value);
 
@@ -73,7 +70,6 @@ function onSubmitGetValue(e) {
       const { hits, total } = response.data;
 
       checkImages(total);
-      Loading.pulse();
 
       const markup = gallery(hits);
       refs.gallery.innerHTML = markup;
@@ -82,17 +78,17 @@ function onSubmitGetValue(e) {
       const ifMore = pixabayApi.hasMorePhotos();
 
       if (ifMore) {
-        const lastImage = document.querySelector('.photo-link:last-child');
+        const lastImage = document.querySelector('.gallery-item:last-child');
         observer.observe(lastImage);
+        console.log(ifMore);
       }
 
       gallerySL.on('show.simplelightbox');
       gallerySL.refresh();
 
       alerts(total, value);
-
-      Loading.remove(1000);
     })
+    .finally(Loading.remove(1000))
     .catch(error => {
       Notify.failure(error.message);
     });
@@ -101,9 +97,6 @@ function onSubmitGetValue(e) {
 function ifNoValue(value) {
   if (!value) {
     Notify.failure('Nothing to search');
-    // refs.gallery.innerHTML = '';
-    // refs.loadMoreBtn.classList.add('is-hidden');
-
     return;
   }
 }
@@ -113,14 +106,13 @@ function checkImages(total) {
       'Sorry, there are NO images matching your search query. Please try again.'
     );
     refs.gallery.innerHTML = '';
-    // refs.loadMoreBtn.classList.add('is-hidden');
     return;
   }
 }
 
 function alerts(total, value) {
   if (total > 40) {
-    Notify.success(`We found ${total} images of "${value}".`);
+    Notify.success(`Hooray! We found ${total} images of "${value}".`);
   }
 
   if (total <= 40) {

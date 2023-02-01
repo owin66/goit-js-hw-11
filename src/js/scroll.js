@@ -1,7 +1,7 @@
 let menuY = 0;
 let scrollY = 0;
 window.addEventListener('scroll', function () {
-  const el = document.querySelector('.form__container');
+  const el = document.querySelector('.container');
   const height = el.offsetHeight;
   const pos = window.pageYOffset;
   const diff = scrollY - pos;

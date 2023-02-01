@@ -3,7 +3,7 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 export class PixabayApi {
   #baseUrl = 'https://pixabay.com/api/';
-  #apiId = '33016957-599281d6368203287fa88dc81';
+  #apiId = '33206801-0516fe2b64dd8f047bb44d786';
   #query = '';
   #page = 1;
   #allImages = 0;
@@ -46,6 +46,6 @@ export class PixabayApi {
   }
 
   hasMorePhotos() {
-    return this.#page <= Math.ceil(this.#allImages / 40);
+    return this.#page < Math.ceil(this.#allImages / 40);
   }
 }
